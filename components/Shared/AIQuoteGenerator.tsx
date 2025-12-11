@@ -1,34 +1,101 @@
+
 import React, { useState } from 'react';
-import { Sparkles, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle, AlertCircle, Check, ArrowRight, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { generateSmartQuote } from '../../services/geminiService';
 import { AIQuoteResponse } from '../../types';
 
+const SERVICE_OPTIONS = [
+  "Weekly Mowing",
+  "Bi-Weekly Mowing",
+  "Landscaping Design",
+  "Irrigation Repair",
+  "Tree Trimming",
+  "Spring Cleanup",
+  "Weeding",
+  "Mulch & Rock",
+  "Power Washing",
+  "Fertilization"
+];
+
+const CONDITION_OPTIONS = [
+  "Overgrown (>6 inches)",
+  "Weeds Present",
+  "Brown Patches",
+  "Pests / Ants",
+  "Broken Sprinklers",
+  "Well Maintained",
+  "New Construction"
+];
+
+const LAST_SERVICE_OPTIONS = [
+  "Less than 1 week ago",
+  "1-2 weeks ago",
+  "3-4 weeks ago",
+  "More than a month ago",
+  "Never / Unknown"
+];
+
 const AIQuoteGenerator: React.FC = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    lawnSize: string;
+    serviceTypes: string[];
+    lawnConditions: string[];
+    lastServiceDate: string;
+    issues: string;
+  }>({
     lawnSize: '',
-    serviceType: 'Maintenance',
+    serviceTypes: [],
+    lawnConditions: [],
+    lastServiceDate: '',
     issues: ''
   });
 
   const [result, setResult] = useState<AIQuoteResponse | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const toggleService = (service: string) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceTypes: prev.serviceTypes.includes(service)
+        ? prev.serviceTypes.filter(s => s !== service)
+        : [...prev.serviceTypes, service]
+    }));
+  };
+
+  const toggleCondition = (condition: string) => {
+    setFormData(prev => ({
+      ...prev,
+      lawnConditions: prev.lawnConditions.includes(condition)
+        ? prev.lawnConditions.filter(c => c !== condition)
+        : [...prev.lawnConditions, condition]
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (formData.serviceTypes.length === 0) {
+      setError("Please select at least one service.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     
     try {
       const response = await generateSmartQuote({
         lawnSize: Number(formData.lawnSize),
-        serviceType: formData.serviceType,
+        serviceTypes: formData.serviceTypes,
+        lawnConditions: formData.lawnConditions,
+        lastServiceDate: formData.lastServiceDate || "Unknown",
         issues: formData.issues || 'None'
       });
       
@@ -70,7 +137,7 @@ const AIQuoteGenerator: React.FC = () => {
         {step === 1 && (
            <div className="text-center space-y-6 py-6">
               <h4 className="text-2xl font-bold text-gray-800">Curious about pricing?</h4>
-              <p className="text-gray-600">Get an instant, AI-generated estimate in seconds without a phone call.</p>
+              <p className="text-gray-600">Get an instant, AI-generated estimate in seconds tailored to your specific lawn needs.</p>
               <button 
                 onClick={() => setStep(2)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-emerald-600/20 transition-all hover:-translate-y-1 w-full md:w-auto"
@@ -81,7 +148,7 @@ const AIQuoteGenerator: React.FC = () => {
         )}
 
         {step === 2 && (
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Approx Lawn Size (sq ft)</label>
               <input 
@@ -97,25 +164,77 @@ const AIQuoteGenerator: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Service Needed</label>
-              <select 
-                name="serviceType"
-                value={formData.serviceType}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
-              >
-                <option value="Weekly Mowing">Weekly Mowing</option>
-                <option value="Fertilization">Fertilization & Weed Control</option>
-                <option value="Spring Cleanup">Spring Cleanup</option>
-                <option value="Landscaping">Landscaping Project</option>
-              </select>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Services Needed (Select all that apply)</label>
+              <div className="grid grid-cols-2 gap-2">
+                {SERVICE_OPTIONS.map((service) => {
+                  const isSelected = formData.serviceTypes.includes(service);
+                  return (
+                    <button
+                      key={service}
+                      type="button"
+                      onClick={() => toggleService(service)}
+                      className={`text-sm px-3 py-2 rounded-lg border transition-all flex items-center gap-2 justify-center ${
+                        isSelected
+                          ? 'bg-emerald-600 border-emerald-600 text-white shadow-md'
+                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {isSelected && <Check size={14} />}
+                      {service}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Current Issues (Optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">When was the last mow?</label>
+              <div className="relative">
+                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                 <select
+                    name="lastServiceDate"
+                    value={formData.lastServiceDate}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none appearance-none bg-white"
+                    required
+                 >
+                    <option value="" disabled>Select a duration</option>
+                    {LAST_SERVICE_OPTIONS.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                 </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Current Condition (Select all that apply)</label>
+              <div className="grid grid-cols-2 gap-2">
+                {CONDITION_OPTIONS.map((condition) => {
+                  const isSelected = formData.lawnConditions.includes(condition);
+                  return (
+                    <button
+                      key={condition}
+                      type="button"
+                      onClick={() => toggleCondition(condition)}
+                      className={`text-sm px-3 py-2 rounded-lg border transition-all flex items-center gap-2 justify-center ${
+                        isSelected
+                          ? 'bg-amber-500 border-amber-500 text-white shadow-md'
+                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      {isSelected && <Check size={14} />}
+                      {condition}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Other Notes / Details</label>
               <textarea 
                 name="issues"
-                placeholder="e.g. lots of dandelions, bare spots near the driveway..."
+                placeholder="Describe any specific requests, access issues (e.g., locked gate), or concerns..."
                 value={formData.issues}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 outline-none h-24 resize-none"
@@ -140,48 +259,67 @@ const AIQuoteGenerator: React.FC = () => {
         )}
 
         {step === 3 && result && (
-          <div className="animate-in fade-in zoom-in duration-300 space-y-6">
-            <div className="flex items-center gap-2 text-emerald-700 font-semibold mb-4">
-               <CheckCircle size={20} />
-               <span>Estimate Ready</span>
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6">
+            {/* Visual Cue: Status Indicator */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-full border border-emerald-100 text-sm font-bold shadow-sm">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    Estimate Ready
+                </div>
+                <div className="text-emerald-300">
+                    <Sparkles size={20} className="animate-pulse" />
+                </div>
             </div>
 
-            <div className="bg-emerald-50 rounded-xl p-6 border border-emerald-100 text-center">
-               <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-2">Estimated Monthly Cost</p>
-               <p className="text-4xl font-bold text-emerald-800">{result.estimatedPrice}</p>
+            {/* Price Card */}
+            <div className="bg-gradient-to-b from-white to-emerald-50/50 rounded-2xl p-6 border border-emerald-100 text-center shadow-sm relative overflow-hidden group hover:shadow-md transition-all duration-300">
+               <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 via-lime-400 to-emerald-400 animate-shimmer"></div>
+               <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2">Estimated Monthly Range</p>
+               <div className="text-4xl md:text-5xl font-extrabold text-emerald-900 tracking-tight mb-1">
+                  {result.estimatedPrice}
+               </div>
+               <p className="text-xs text-emerald-600 font-medium">Based on your inputs & Florida standards</p>
             </div>
 
             <div className="space-y-4">
-              <h5 className="font-semibold text-gray-900">AI Summary</h5>
-              <p className="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg">
+              <h5 className="font-bold text-gray-900 flex items-center gap-2 text-sm uppercase tracking-wide">
+                <Sparkles size={16} className="text-amber-400" /> 
+                AI Analysis
+              </h5>
+              <div className="bg-white p-4 rounded-xl border border-gray-100 text-gray-700 text-sm leading-relaxed shadow-sm">
                 {result.summary}
-              </p>
+              </div>
             </div>
 
             <div className="space-y-3">
-               <h5 className="font-semibold text-gray-900">Immediate Care Tips</h5>
+               <h5 className="font-bold text-gray-900 text-sm uppercase tracking-wide">Pro Tips for Your Lawn</h5>
                <ul className="space-y-2">
                  {result.tips.map((tip, idx) => (
-                   <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                     <span className="text-emerald-500 mt-1">•</span>
-                     {tip}
+                   <li key={idx} className="flex items-start gap-3 text-sm text-gray-600 bg-white p-2.5 rounded-lg border border-gray-50 hover:border-emerald-100 transition-colors">
+                     <CheckCircle size={16} className="text-emerald-500 mt-0.5 shrink-0" />
+                     <span>{tip}</span>
                    </li>
                  ))}
                </ul>
             </div>
 
-            <div className="pt-4 flex gap-3">
+            <div className="pt-4 space-y-3">
               <button 
-                onClick={() => window.location.hash = '#contact'}
-                className="flex-1 bg-emerald-800 hover:bg-emerald-900 text-white py-3 rounded-lg font-semibold text-sm transition-colors"
+                onClick={() => navigate('/contact')}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg transition-all shadow-xl shadow-emerald-600/20 hover:shadow-emerald-600/40 hover:-translate-y-1 flex items-center justify-center gap-2 group ring-2 ring-emerald-500/0 hover:ring-emerald-500/20"
               >
-                Book This Service
+                <span>Book This Service</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
+              
               <button 
                 onClick={() => setStep(1)}
-                className="px-4 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 text-sm font-semibold transition-colors"
+                className="w-full py-2 text-gray-400 hover:text-gray-600 text-sm font-medium transition-colors hover:underline"
               >
-                New Quote
+                Start New Estimate
               </button>
             </div>
           </div>

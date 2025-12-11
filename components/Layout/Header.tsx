@@ -33,6 +33,7 @@ const Header: React.FC = () => {
       case 'Contact': return <Phone size={size} className={className} />;
       case 'Privacy': return <Shield size={size} className={className} />;
       case 'Terms': return <FileText size={size} className={className} />;
+      case 'Gallery': return <FileText size={size} className={className} />; // Reusing icon for simplicity
       default: return null;
     }
   };
@@ -103,13 +104,13 @@ const Header: React.FC = () => {
             </div>
             
             <div className="flex items-center gap-4 pl-6 border-l border-gray-200 h-10">
-              <a 
-                href="#" 
-                className="text-sm font-semibold flex items-center gap-2 transition-colors text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 px-3 py-2 rounded-lg"
+              <NavLink 
+                to="/portal" 
+                className={({ isActive }) => `text-sm font-semibold flex items-center gap-2 transition-colors px-3 py-2 rounded-lg ${isActive ? 'text-emerald-700 bg-emerald-50' : 'text-gray-500 hover:text-emerald-600 hover:bg-emerald-50'}`}
               >
                 <UserCircle size={20} />
                 Portal
-              </a>
+              </NavLink>
 
               <NavLink 
                 to="/contact" 
@@ -169,16 +170,16 @@ const Header: React.FC = () => {
             
             <div className="h-px bg-gray-100 my-2" />
             
-            <a 
-              href="#"
+            <NavLink 
+              to="/portal"
               onClick={() => setIsOpen(false)}
-              className="text-lg font-semibold px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 flex items-center gap-3"
+              className={({ isActive }) => `text-lg font-semibold px-4 py-3 rounded-xl flex items-center gap-3 ${isActive ? 'text-emerald-800 bg-emerald-50' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600">
                 <UserCircle size={20} />
               </div>
               Customer Portal
-            </a>
+            </NavLink>
             
             <NavLink 
               to="/contact" 

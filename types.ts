@@ -1,3 +1,4 @@
+
 export interface Service {
   id: string;
   title: string;
@@ -20,7 +21,9 @@ export interface Testimonial {
 
 export interface QuoteRequest {
   lawnSize: number; // sq ft
-  serviceType: string;
+  serviceTypes: string[];
+  lawnConditions: string[];
+  lastServiceDate: string;
   issues: string;
 }
 

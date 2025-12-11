@@ -4,7 +4,8 @@ import Features from '../components/Home/Features';
 import ServiceCard from '../components/Shared/ServiceCard';
 import AIQuoteGenerator from '../components/Shared/AIQuoteGenerator';
 import { SERVICES, TESTIMONIALS } from '../constants';
-import { Star, Quote, Check } from 'lucide-react';
+import { Star, Quote, Check, ArrowRight } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
 const Home: React.FC = () => {
   return (
@@ -29,23 +30,124 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Additional Service Info */}
-      <section className="py-20 bg-white">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
-             <div className="md:w-1/2">
-                <img src="https://aalawns.com/wp-content/uploads/2023/03/lawncare-cincinnati-northern-kentucky-768x512.jpg" alt="Weeding and Plant Care" className="rounded-2xl shadow-2xl" />
+      {/* Deep Dive Service Info Sections */}
+      <section className="py-24 bg-white overflow-hidden">
+          <div className="container mx-auto px-4">
+             
+             {/* Section 1: Mowing & Trimming (Image Left) */}
+             <div className="flex flex-col md:flex-row items-center gap-12 mb-24 animate-in slide-in-from-left duration-700">
+                <div className="md:w-1/2 relative">
+                   <div className="absolute -inset-4 bg-emerald-100/50 rounded-2xl transform -rotate-2"></div>
+                   <img 
+                    src="https://scontent.fdar12-1.fna.fbcdn.net/v/t39.30808-6/480975432_122202856250057044_8757728266785419670_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=z1943w1Gq4MQ7kNvwGqbzzK&_nc_oc=AdmxZlZmdKazJr6kD-0UaoCQOywZeYyb9QZ742DlGX2hz6hnbF48LFwHP8wEGSYiWgg&_nc_zt=23&_nc_ht=scontent.fdar12-1.fna&_nc_gid=68cieBQqgGsBZIobPIdSgA&oh=00_AfmCo_vDp2W0k2AsgL3i7cwF9FG-opGil9-0oCn53tb0yg&oe=6940B353" 
+                    alt="Mowing and Trimming" 
+                    className="relative rounded-2xl shadow-2xl w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500" 
+                   />
+                </div>
+                <div className="md:w-1/2 space-y-6">
+                   <h2 className="text-emerald-600 font-bold tracking-widest uppercase text-sm">The Essentials</h2>
+                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900">Mowing & Trimming</h3>
+                   <p className="text-gray-600 text-lg leading-relaxed">
+                      Expert cuts, affordable prices, and the crispest edges in Cape Coral. We don't just cut grass; we maintain a uniform height and professional appearance that makes your neighbors jealous.
+                   </p>
+                   <ul className="space-y-4 pt-2">
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Precision edging along driveways & walks</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Consistent mowing schedule</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Debris blowing & cleanup included</span>
+                      </li>
+                   </ul>
+                   <div className="pt-4">
+                     <NavLink to="/services" className="text-emerald-600 font-bold flex items-center gap-2 hover:gap-3 transition-all">
+                        Learn More <ArrowRight size={20} />
+                     </NavLink>
+                   </div>
+                </div>
              </div>
-             <div className="md:w-1/2 space-y-6">
-                <h3 className="text-3xl font-bold text-gray-900">Weeding & Plant Care</h3>
-                <p className="text-gray-600 text-lg">
-                   Keeping your flower beds and plant areas tidy is just as important as the mow. Our team removes weeds and ensures your plants are healthy and looking their best.
-                </p>
-                <ul className="space-y-3">
-                   <li className="flex items-center gap-3"><div className="bg-emerald-100 p-1 rounded-full text-emerald-600"><Check size={16}/></div><span>Hand weeding of flower beds</span></li>
-                   <li className="flex items-center gap-3"><div className="bg-emerald-100 p-1 rounded-full text-emerald-600"><Check size={16}/></div><span>Plant trimming and pruning</span></li>
-                   <li className="flex items-center gap-3"><div className="bg-emerald-100 p-1 rounded-full text-emerald-600"><Check size={16}/></div><span>Mulch refreshing</span></li>
-                </ul>
+
+             {/* Section 2: Weeding & Plant Care (Image Right) */}
+             <div className="flex flex-col md:flex-row-reverse items-center gap-12 mb-24 animate-in slide-in-from-right duration-700">
+                <div className="md:w-1/2 relative">
+                   <div className="absolute -inset-4 bg-lime-100/50 rounded-2xl transform rotate-2"></div>
+                   <img 
+                    src="https://aalawns.com/wp-content/uploads/2023/03/lawncare-cincinnati-northern-kentucky-768x512.jpg" 
+                    alt="Weeding and Plant Care" 
+                    className="relative rounded-2xl shadow-2xl w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500" 
+                   />
+                </div>
+                <div className="md:w-1/2 space-y-6">
+                   <h2 className="text-emerald-600 font-bold tracking-widest uppercase text-sm">Detailed Care</h2>
+                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900">Weeding & Plant Care</h3>
+                   <p className="text-gray-600 text-lg leading-relaxed">
+                      Keeping your flower beds and plant areas tidy is just as important as the mow. Our team removes unsightly weeds and ensures your plants are healthy, vibrant, and looking their best.
+                   </p>
+                   <ul className="space-y-4 pt-2">
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Hand weeding of flower beds</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Plant trimming and pruning</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Bed definition & edging</span>
+                      </li>
+                   </ul>
+                   <div className="pt-4">
+                     <NavLink to="/services" className="text-emerald-600 font-bold flex items-center gap-2 hover:gap-3 transition-all">
+                        Learn More <ArrowRight size={20} />
+                     </NavLink>
+                   </div>
+                </div>
              </div>
+
+             {/* Section 3: Maintenance & More (Image Left) */}
+             <div className="flex flex-col md:flex-row items-center gap-12 animate-in slide-in-from-left duration-700">
+                <div className="md:w-1/2 relative">
+                   <div className="absolute -inset-4 bg-teal-100/50 rounded-2xl transform -rotate-2"></div>
+                   <img 
+                    src="https://earthdevelopmentinc.com/wp-content/uploads/2024/05/61447723475064a3510bc927_Lawn-Care-and-Lawn-Maintenance.jpg" 
+                    alt="Maintenance and More" 
+                    className="relative rounded-2xl shadow-2xl w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500" 
+                   />
+                </div>
+                <div className="md:w-1/2 space-y-6">
+                   <h2 className="text-emerald-600 font-bold tracking-widest uppercase text-sm">Total Solutions</h2>
+                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900">Maintenance & More</h3>
+                   <p className="text-gray-600 text-lg leading-relaxed">
+                      We go beyond the grass. From refreshing mulch and rock beds to seasonal cleanups, we handle the heavy lifting so your entire property retains its value and curb appeal.
+                   </p>
+                   <ul className="space-y-4 pt-2">
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Mulch & Rock installation</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Seasonal property cleanups</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <div className="bg-emerald-100 p-1.5 rounded-full text-emerald-600"><Check size={18}/></div>
+                        <span className="font-medium text-gray-800">Sod installation & repair</span>
+                      </li>
+                   </ul>
+                   <div className="pt-4">
+                     <NavLink to="/services" className="text-emerald-600 font-bold flex items-center gap-2 hover:gap-3 transition-all">
+                        Learn More <ArrowRight size={20} />
+                     </NavLink>
+                   </div>
+                </div>
+             </div>
+
           </div>
       </section>
 

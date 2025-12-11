@@ -9,6 +9,10 @@ import AboutPage from './pages/AboutPage';
 import LocationsPage from './pages/LocationsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
+import GalleryPage from './pages/GalleryPage';
+import PortalLoginPage from './pages/PortalLoginPage';
+import PortalDashboardPage from './pages/PortalDashboardPage';
+import QuotePage from './pages/QuotePage';
 
 const App: React.FC = () => {
   return (
@@ -19,11 +23,15 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/locations" element={<LocationsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/portal" element={<PortalLoginPage />} />
+            <Route path="/portal/dashboard" element={<PortalDashboardPage />} />
+            <Route path="/quote" element={<QuotePage />} />
           </Routes>
         </main>
         <Footer />

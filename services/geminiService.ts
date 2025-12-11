@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuoteRequest, AIQuoteResponse } from "../types";
 
@@ -21,16 +22,20 @@ export const generateSmartQuote = async (request: QuoteRequest): Promise<AIQuote
         The climate is tropical, with specific grass types like St. Augustine and Floratam.
         A customer has provided the following details about their lawn:
         - Approximate Size: ${request.lawnSize} sq ft
-        - Desired Service: ${request.serviceType}
-        - Specific Issues/Notes: ${request.issues}
+        - Desired Services: ${request.serviceTypes.join(', ')}
+        - Last Service Date: ${request.lastServiceDate}
+        - Current Condition Flags: ${request.lawnConditions.join(', ')}
+        - Customer Notes/Issues: ${request.issues}
 
         Our Standard Pricing Reference (for your internal calculation logic only):
         - Weekly Maintenance: starts around $139/mo
         - Bi-Weekly: starts around $109/mo
         - Landscaping: Custom
+        - Overgrown lawns (>6 inches or not mowed in >3 weeks) usually require a first-time cleanup fee ($150+).
+        - Other services: Estimate based on industry standards for Florida.
 
         Based on this, provide:
-        1. A realistic estimated monthly price range (e.g. "$110 - $140").
+        1. A realistic estimated monthly price range (e.g. "$110 - $140") or a project range if it's one-time work.
         2. A short, professional summary of what we will do (max 2 sentences).
         3. Three specific tips for the homeowner to improve their lawn condition immediately, considering the Florida climate (e.g. irrigation, chinch bugs, fungus).
 

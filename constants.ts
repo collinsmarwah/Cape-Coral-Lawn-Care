@@ -1,3 +1,4 @@
+
 import { Service, Testimonial } from './types';
 
 export const CONTACT_INFO = {
@@ -12,6 +13,7 @@ export const LOGO_URL = "https://capecorallawncare.com/wp-content/uploads/2025/0
 export const NAV_LINKS = [
   { name: 'Home', path: '/' },
   { name: 'Services', path: '/services' },
+  { name: 'Gallery', path: '/gallery' },
   { name: 'Locations', path: '/locations' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
@@ -49,7 +51,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Landscaping, Design, and Maintenance",
     description: "Transform your outdoor space with custom landscaping, design, and ongoing care for lasting beauty.",
-    image: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80&w=800&h=600",
     features: [
       "Custom Landscape Design",
       "Professional Installation",
@@ -60,7 +62,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Lawn Cleaning and Maintenance",
     description: "Ensure your lawn stays tidy and healthy with debris removal, trimming, and routine maintenance.",
-    image: "https://images.unsplash.com/photo-1592424036068-16447c2079b7?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://www.connectcleaning.net.au/wp-content/uploads/2022/05/featured-garden-maintenance-1024x700.jpg",
     features: [
       "Seasonal Cleanup",
       "Leaf & Debris Removal",
@@ -82,7 +84,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Lawn Seeding Maintenance",
     description: "Promote lush, vibrant growth with professional lawn seeding and targeted maintenance solutions.",
-    image: "https://images.unsplash.com/photo-1576043005963-f4b2a8d11c01?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNDV-cYtQND0CLZ9aR-ltRM8elEvv2PQzMVA&s",
     features: [
       "Professional Overseeding",
       "Soil Aeration",
@@ -93,7 +95,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Mulch and Rock Maintenance",
     description: "Enhance your landscape's appearance and health with expert mulch and rock installation and upkeep.",
-    image: "https://images.unsplash.com/photo-1621961458348-f013d182b672?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcuZh1lNHqXC0LeVGSgUwc9LBzcTbK3mLVHA&s",
     features: [
       "Weed Barrier Installation",
       "Premium Mulch Options",
@@ -104,7 +106,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Plant Care Maintenance",
     description: "Nurture your plants with professional care and maintenance to keep them thriving and vibrant.",
-    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=800&h=600",
     features: [
       "Shrub Fertilization",
       "Disease Control",
@@ -115,7 +117,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Tree Installation Services",
     description: "Beautify your property with expert tree selection and installation tailored to your landscape.",
-    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800&h=600",
     features: [
       "Native Tree Selection",
       "Professional Planting",
@@ -137,7 +139,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Tree and Shrub Trimming",
     description: "Enhance your trees' health and property value with professional trimming services for safety and aesthetics.",
-    image: "https://images.unsplash.com/photo-1599598425947-734d5b7a5a8d?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=800&auto=format&fit=crop",
     features: [
       "Canopy Raising",
       "Deadwood Removal",
@@ -148,7 +150,7 @@ export const DETAILED_SERVICES = [
   {
     title: "Power Washing",
     description: "Restore the cleanliness of your driveways, sidewalks, and patios with professional power washing services.",
-    image: "https://images.unsplash.com/photo-1621255535319-3c7247a32b6e?auto=format&fit=crop&q=80&w=250&h=250",
+    image: "https://majesticwindowsexteriorcleaning.com/wp-content/uploads/2021/09/pressure-washer-cleaning-concrete.jpg",
     features: [
       "Driveways & Sidewalks",
       "Patios & Decks",
