@@ -3,9 +3,9 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { QuoteRequest, AIQuoteResponse } from "../types";
 
 // Initialize the Gemini client
-// Note: process.env.API_KEY is assumed to be available as per guidelines.
+// Note: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' is assumed to be available as per guidelines.
 const getClient = () => {
-    const apiKey = process.env.API_KEY;
+    const apiKey = process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT';
     if (!apiKey) {
         console.warn("API_KEY is missing from environment variables.");
         return null;
