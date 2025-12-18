@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, CheckCircle, Shield } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import ContactForm from '../components/Shared/ContactForm';
 
 const teamMembers = [
@@ -121,9 +122,9 @@ const AboutPage: React.FC = () => {
           <div className="container mx-auto px-4 text-center text-white">
               <h2 className="text-3xl font-bold mb-6">Join the Team</h2>
               <p className="max-w-2xl mx-auto text-emerald-100 mb-8">We are always looking for dedicated landscaping professionals in Cape Coral.</p>
-              <button className="bg-white text-emerald-900 px-8 py-3 rounded-full font-bold hover:bg-emerald-50 transition-colors">
+              <NavLink to="/contact" className="bg-white text-emerald-900 px-8 py-3 rounded-full font-bold hover:bg-emerald-50 transition-colors inline-block">
                   Contact for Careers
-              </button>
+              </NavLink>
           </div>
       </div>
 

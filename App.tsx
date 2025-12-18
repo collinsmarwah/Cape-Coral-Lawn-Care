@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Home from './pages/Home';
@@ -30,6 +30,7 @@ const App: React.FC = () => {
         <Header />
         <main className="flex-grow">
           <Routes>
+            <Route index element={<Home />} />
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
@@ -37,11 +38,13 @@ const App: React.FC = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/legal" element={<LegalPage />} />
-            <Route path="/privacy" element={<LegalPage />} />
-            <Route path="/terms" element={<LegalPage />} />
+            <Route path="/privacy" element={<Navigate to="/legal" replace />} />
+            <Route path="/terms" element={<Navigate to="/legal" replace />} />
             <Route path="/portal" element={<PortalLoginPage />} />
             <Route path="/portal/dashboard" element={<PortalDashboardPage />} />
             <Route path="/quote" element={<QuotePage />} />
+            {/* Fallback to home for any undefined routes */}
+            <Route path="*" element={<Home />} />
           </Routes>
         </main>
         <Footer />
