@@ -1,4 +1,3 @@
-
 import { Service, Testimonial } from './types';
 
 export const CONTACT_INFO = {
@@ -7,7 +6,6 @@ export const CONTACT_INFO = {
   email: "team@capecorallawncare.com"
 };
 
-// Replace this URL with your actual logo image path (e.g., '/logo.png')
 export const LOGO_URL = "https://capecorallawncare.com/wp-content/uploads/2025/02/cropped-cape-coral-lawn-care-logo.webp";
 
 export const NAV_LINKS = [
@@ -17,9 +15,7 @@ export const NAV_LINKS = [
   { name: 'Locations', path: '/locations' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
-  { name: 'Privacy', path: '/privacy' },
-  { name: 'Terms', path: '/terms' },
-  // { name: 'Customer Portal', path: '/portal', external: true } // Handled manually in Header
+  { name: 'Legal', path: '/legal' }
 ];
 
 export const SERVICE_CATALOG = [

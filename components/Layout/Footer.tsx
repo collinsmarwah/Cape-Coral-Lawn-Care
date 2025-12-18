@@ -142,8 +142,8 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="flex gap-6 order-2 lg:order-3">
-            <NavLink to="/privacy" className="hover:text-white">Privacy Policy</NavLink>
-            <NavLink to="/terms" className="hover:text-white">Terms of Service</NavLink>
+            <NavLink to="/legal#privacy" className="hover:text-white">Privacy Policy</NavLink>
+            <NavLink to="/legal#terms" className="hover:text-white">Terms of Service</NavLink>
           </div>
         </div>
       </div>

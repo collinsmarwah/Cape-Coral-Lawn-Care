@@ -1,19 +1,20 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuoteRequest, AIQuoteResponse } from "../types";
 
 // Initialize the Gemini client
-// Note: process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' is assumed to be available as per guidelines.
+// Note: process.env.API_KEY is assumed to be available as per guidelines.
 const getClient = () => {
-    const apiKey = process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT';
+    const apiKey = process.env.API_KEY;
     if (!apiKey) {
         console.warn("API_KEY is missing from environment variables.");
         return null;
     }
+    // Correct initialization with named parameter per guidelines
     return new GoogleGenAI({ apiKey });
 };
 
 export const generateSmartQuote = async (request: QuoteRequest): Promise<AIQuoteResponse | null> => {
+    // Create instance right before making the API call as per guidelines
     const ai = getClient();
     if (!ai) return null;
 
@@ -43,8 +44,9 @@ export const generateSmartQuote = async (request: QuoteRequest): Promise<AIQuote
     `;
 
     try {
+        // Updated model to gemini-3-flash-preview as recommended for basic text tasks
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-3-flash-preview",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -63,10 +65,11 @@ export const generateSmartQuote = async (request: QuoteRequest): Promise<AIQuote
             }
         });
 
+        // Use .text property instead of .text() method
         const text = response.text;
         if (!text) throw new Error("No response from AI");
 
-        return JSON.parse(text) as AIQuoteResponse;
+        return JSON.parse(text.trim()) as AIQuoteResponse;
 
     } catch (error) {
         console.error("Error generating quote:", error);

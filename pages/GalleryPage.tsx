@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Camera } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Camera, X, ChevronLeft, ChevronRight, ZoomIn, Filter } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 type Category = 'All' | 'Lawn Maintenance' | 'Landscaping' | 'Tree Services';
@@ -22,10 +22,55 @@ const GALLERY_ITEMS: { url: string; category: Exclude<Category, 'All'> }[] = [
 
 const GalleryPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filteredImages = activeCategory === 'All' 
     ? GALLERY_ITEMS 
     : GALLERY_ITEMS.filter(item => item.category === activeCategory);
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+  };
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    document.body.style.overflow = 'auto'; // Restore scrolling
+  }, []);
+
+  const nextImage = useCallback(() => {
+    setLightboxIndex((prev) => 
+      prev === null ? null : (prev + 1) % filteredImages.length
+    );
+  }, [filteredImages.length]);
+
+  const prevImage = useCallback(() => {
+    setLightboxIndex((prev) => 
+      prev === null ? null : (prev - 1 + filteredImages.length) % filteredImages.length
+    );
+  }, [filteredImages.length]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxIndex === null) return;
+      
+      switch (e.key) {
+        case 'Escape':
+          closeLightbox();
+          break;
+        case 'ArrowRight':
+          nextImage();
+          break;
+        case 'ArrowLeft':
+          prevImage();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, nextImage, prevImage, closeLightbox]);
 
   return (
     <div className="pt-24 min-h-screen pb-20 bg-gray-50">
@@ -33,27 +78,31 @@ const GalleryPage: React.FC = () => {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-block bg-emerald-100 p-3 rounded-full text-emerald-600 mb-4">
+          <div className="inline-block bg-emerald-100 p-3 rounded-full text-emerald-600 mb-4 shadow-sm">
             <Camera size={32} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Work</h1>
-          <p className="text-xl text-gray-600">
-            Take a look at some of the recent projects we've completed around Cape Coral. From routine maintenance to total transformations.
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">Our Recent Work</h1>
+          <p className="text-xl text-gray-600 leading-relaxed">
+            See the difference we make. From routine maintenance to total landscape transformations across Cape Coral.
           </p>
         </div>
 
         {/* Filter Controls */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-12 sticky top-24 z-30 bg-gray-50/95 backdrop-blur-sm py-4 rounded-xl">
             {CATEGORIES.map(category => (
                 <button
                     key={category}
-                    onClick={() => setActiveCategory(category)}
-                    className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                    onClick={() => {
+                        setActiveCategory(category);
+                        setLightboxIndex(null); // Reset lightbox if open
+                    }}
+                    className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 ${
                         activeCategory === category
-                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 scale-105'
                         : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-emerald-600 border border-gray-200'
                     }`}
                 >
+                    {activeCategory === category && <Filter size={14} className="animate-pulse"/>}
                     {category}
                 </button>
             ))}
@@ -63,17 +112,28 @@ const GalleryPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-20">
           {filteredImages.map((item, idx) => (
             <div 
-              key={item.url} 
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 bg-gray-200 animate-in fade-in zoom-in-95"
+              key={`${item.url}-${idx}`} 
+              onClick={() => openLightbox(idx)}
+              className="group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 bg-gray-200 cursor-zoom-in animate-in fade-in zoom-in-95 fill-mode-forwards"
+              style={{ animationDelay: `${idx * 50}ms` }}
             >
               <img 
                 src={item.url} 
-                alt={`Cape Coral Lawn Care ${item.category} Project`} 
+                alt={`${item.category} Project`} 
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <span className="text-white font-semibold text-sm bg-emerald-600/90 px-3 py-1 rounded-full backdrop-blur-sm">
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                 <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full p-3">
+                    <ZoomIn size={24} />
+                 </div>
+              </div>
+
+              {/* Category Tag */}
+              <div className="absolute bottom-4 left-4">
+                <span className="text-xs font-bold bg-black/50 text-white px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-lg translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-75">
                     {item.category}
                 </span>
               </div>
@@ -81,21 +141,89 @@ const GalleryPage: React.FC = () => {
           ))}
         </div>
 
+        {/* Empty State */}
+        {filteredImages.length === 0 && (
+            <div className="text-center py-20 text-gray-400">
+                <p>No photos found in this category yet.</p>
+            </div>
+        )}
+
         {/* CTA */}
-        <div className="bg-white rounded-3xl p-8 md:p-12 text-center shadow-sm border border-gray-100 max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Like What You See?</h2>
-          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Let's make your lawn the next highlight in our gallery. Contact us today for a free estimate.
+        <div className="bg-white rounded-3xl p-8 md:p-16 text-center shadow-lg shadow-emerald-900/5 border border-gray-100 max-w-4xl mx-auto relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5 transform rotate-12">
+             <Camera size={120} className="text-emerald-900" />
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 relative z-10">Ready to Transform Your Lawn?</h2>
+          <p className="text-gray-600 mb-10 max-w-xl mx-auto text-lg relative z-10">
+            Let's make your property the next highlight in our gallery. Contact us today for a free, no-obligation estimate.
           </p>
           <NavLink 
             to="/quote" 
-            className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-1"
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-full shadow-xl shadow-emerald-600/30 transition-all transform hover:-translate-y-1 relative z-10"
           >
-            Get a Quote
+            Get My Free Quote
+            <ChevronRight size={20} />
           </NavLink>
         </div>
 
       </div>
+
+      {/* Lightbox Modal */}
+      {lightboxIndex !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-200">
+            
+            {/* Close Button */}
+            <button 
+                onClick={closeLightbox}
+                className="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all z-50"
+                aria-label="Close Gallery"
+            >
+                <X size={32} />
+            </button>
+
+            {/* Navigation Buttons */}
+            <button 
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                className="absolute left-4 md:left-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-50 hover:scale-110"
+                aria-label="Previous Image"
+            >
+                <ChevronLeft size={32} />
+            </button>
+
+            <button 
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                className="absolute right-4 md:right-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-50 hover:scale-110"
+                aria-label="Next Image"
+            >
+                <ChevronRight size={32} />
+            </button>
+
+            {/* Main Image Container */}
+            <div 
+                className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12"
+                onClick={closeLightbox} // Click outside image to close
+            >
+                <div 
+                    className="relative max-h-full max-w-full"
+                    onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
+                >
+                    <img 
+                        src={filteredImages[lightboxIndex].url} 
+                        alt={filteredImages[lightboxIndex].category}
+                        className="max-h-[80vh] max-w-full object-contain rounded shadow-2xl animate-in zoom-in-95 duration-300"
+                    />
+                    <div className="absolute bottom-4 left-0 right-0 text-center">
+                        <span className="inline-block bg-black/60 text-white/90 px-4 py-2 rounded-full backdrop-blur-md text-sm font-medium border border-white/10">
+                            {filteredImages[lightboxIndex].category}
+                        </span>
+                         <div className="text-white/50 text-xs mt-2">
+                            {lightboxIndex + 1} of {filteredImages.length}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };

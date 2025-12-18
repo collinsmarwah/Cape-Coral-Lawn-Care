@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, CheckCircle, Handshake } from 'lucide-react';
+import { Users, CheckCircle, Shield } from 'lucide-react';
 import ContactForm from '../components/Shared/ContactForm';
 
 const teamMembers = [
@@ -21,7 +21,7 @@ const teamMembers = [
   {
     name: "Tyler Cone",
     bio: "Tyler also thrills at the outdoors to a great degree. Born and raised in Florida, he often will fish and hunt with his family, regaling the tales of his latest catches.",
-    image: "https://capecorallawncare.com/wp-content/uploads/2024/12/A7405129-scaled.jpg.webp" // Corrected path from wpcontent to wp-content based on standard WP structure
+    image: "https://capecorallawncare.com/wp-content/uploads/2024/12/A7405129-scaled.jpg.webp"
   }
 ];
 
@@ -101,7 +101,7 @@ const AboutPage: React.FC = () => {
             </div>
             <div className="text-center space-y-4">
                 <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600">
-                    <Handshake size={32} />
+                    <Shield size={32} />
                 </div>
                 <h3 className="text-xl font-bold">Skin in the Game</h3>
                 <p className="text-gray-600">By empowering local owners & operators with fair wages, you guarantee that the technician helping you has a stake in doing it right.</p>
