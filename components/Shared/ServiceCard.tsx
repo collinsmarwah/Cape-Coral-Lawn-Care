@@ -59,6 +59,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
         
         <NavLink 
           to="/quote" 
+          state={{ selectedService: service.title }}
           className={`w-full py-5 px-4 rounded-[1.5rem] font-black text-center transition-all duration-300 flex items-center justify-center gap-3 group/btn active:scale-95 ${
             service.highlight 
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 hover:shadow-2xl hover:shadow-emerald-600/40' 

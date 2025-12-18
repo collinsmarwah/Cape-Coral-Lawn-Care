@@ -2,7 +2,6 @@ import React from 'react';
 import Hero from '../components/Home/Hero';
 import Features from '../components/Home/Features';
 import ServiceCard from '../components/Shared/ServiceCard';
-import AIQuoteGenerator from '../components/Shared/AIQuoteGenerator';
 import { SERVICES, TESTIMONIALS } from '../constants';
 import { Star, Quote, Check, ArrowRight, Users, Sparkles } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
@@ -110,43 +109,10 @@ const Home: React.FC = () => {
                      <NavLink to="/quote" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-2xl font-black flex items-center gap-2 transition-all shadow-lg shadow-emerald-600/20 active:scale-95">
                         Get Estimate <ArrowRight size={18} />
                      </NavLink>
-                   </div>
                 </div>
              </div>
           </div>
-      </section>
-
-      {/* AI Quote Section */}
-      <section className="py-24 bg-emerald-900 dark:bg-emerald-950 relative overflow-hidden" id="quote-section">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-400/10 rounded-full blur-[100px]"></div>
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-400/10 rounded-full blur-[100px]"></div>
-        
-        <div className="container mx-auto px-4 relative z-10 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          <div className="lg:w-1/2 text-white space-y-6">
-            <h2 className="text-4xl md:text-6xl font-black leading-tight tracking-tighter">Instant AI-Powered <br/><span className="text-emerald-400 flex items-center gap-3">Quote Analysis <Sparkles className="animate-pulse" /></span></h2>
-            <p className="text-emerald-100 text-xl leading-relaxed">
-              Why wait for a call back? Our AI estimator uses local Cape Coral data to give you a personalized price range for your lawn maintenance in seconds.
-            </p>
-            <div className="space-y-4 pt-6">
-              {[
-                "Customized for Florida grass types",
-                "Instant monthly pricing range",
-                "Expert tips for lawn health",
-                "No commitment required"
-              ].map((text, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="bg-emerald-500/30 p-1.5 rounded-full text-emerald-300 border border-emerald-400/20 shadow-inner"><Check size={16} /></div>
-                  <span className="text-emerald-50 font-bold text-lg">{text}</span>
-                </div>
-              ))}
-            </div>
           </div>
-          
-          <div className="lg:w-1/2 w-full">
-            <AIQuoteGenerator />
-          </div>
-        </div>
       </section>
 
       {/* Testimonials */}

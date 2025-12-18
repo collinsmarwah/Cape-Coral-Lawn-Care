@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Camera, X, ChevronLeft, ChevronRight, ZoomIn, Filter } from 'lucide-react';
+import { Camera, X, ChevronLeft, ChevronRight, ZoomIn, Filter, Image as ImageIcon } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 type Category = 'All' | 'Lawn Maintenance' | 'Landscaping' | 'Tree Services';
@@ -20,6 +20,63 @@ const GALLERY_ITEMS: { url: string; category: Exclude<Category, 'All'> }[] = [
   { url: "https://scontent.fdar12-1.fna.fbcdn.net/v/t39.30808-6/482066536_122202862010057044_8556420024208133221_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=OVaP86NGcJEQ7kNvwGXlh6L&_nc_oc=Adnv-tcB69WQeFWWd7gcXmQJrE7hy23VoTapO0l2O5fgahY3EIGzO0CW8dFWkaG3_mM&_nc_zt=23&_nc_ht=scontent.fdar12-1.fna&_nc_gid=pKcIoE5CdJAPLTGsQXF_Jw&oh=00_AfmhPfdTGZOTCdHaRTA-MOCnIZuV_uInrEV7ygiMXqYN4w&oe=69408B2E", category: "Landscaping" }
 ];
 
+interface LazyImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+  onClick?: () => void;
+  category: string;
+}
+
+const LazyImage: React.FC<LazyImageProps> = ({ src, alt, className, onClick, category }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div 
+      className={`group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 cursor-zoom-in bg-gray-100 dark:bg-gray-900 ${className || ''}`}
+      onClick={onClick}
+    >
+      {/* Skeleton / Shimmer Effect */}
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full h-full bg-emerald-50 dark:bg-emerald-950/20 animate-pulse flex items-center justify-center">
+                <ImageIcon className="text-emerald-200 dark:text-emerald-900/40" size={48} />
+            </div>
+        </div>
+      )}
+
+      {/* Actual Image */}
+      <img 
+        src={src} 
+        alt={alt} 
+        onLoad={() => setIsLoaded(true)}
+        className={`w-full h-full object-cover transform transition-all duration-1000 ease-out group-hover:scale-105 ${
+          isLoaded ? 'opacity-100' : 'opacity-0 scale-95'
+        }`}
+        loading="lazy"
+      />
+      
+      {/* Overlay controls - only visible if loaded for cleaner experience */}
+      {isLoaded && (
+        <>
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full p-3">
+                    <ZoomIn size={24} />
+                </div>
+            </div>
+
+            {/* Category Tag */}
+            <div className="absolute bottom-4 left-4">
+                <span className="text-xs font-bold bg-black/50 text-white px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-lg translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-75">
+                    {category}
+                </span>
+            </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 const GalleryPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -30,12 +87,12 @@ const GalleryPage: React.FC = () => {
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
+    document.body.style.overflow = 'hidden'; 
   };
 
   const closeLightbox = useCallback(() => {
     setLightboxIndex(null);
-    document.body.style.overflow = 'auto'; // Restore scrolling
+    document.body.style.overflow = 'auto'; 
   }, []);
 
   const nextImage = useCallback(() => {
@@ -50,7 +107,6 @@ const GalleryPage: React.FC = () => {
     );
   }, [filteredImages.length]);
 
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (lightboxIndex === null) return;
@@ -73,33 +129,33 @@ const GalleryPage: React.FC = () => {
   }, [lightboxIndex, nextImage, prevImage, closeLightbox]);
 
   return (
-    <div className="pt-24 min-h-screen pb-20 bg-gray-50">
+    <div className="pt-24 min-h-screen pb-20 bg-gray-50 dark:bg-gray-950">
       <div className="container mx-auto px-4">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-block bg-emerald-100 p-3 rounded-full text-emerald-600 mb-4 shadow-sm">
+          <div className="inline-block bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-full text-emerald-600 dark:text-emerald-400 mb-4 shadow-sm">
             <Camera size={32} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">Our Recent Work</h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">Our Recent Work</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
             See the difference we make. From routine maintenance to total landscape transformations across Cape Coral.
           </p>
         </div>
 
         {/* Filter Controls */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 sticky top-24 z-30 bg-gray-50/95 backdrop-blur-sm py-4 rounded-xl">
+        <div className="flex flex-wrap justify-center gap-3 mb-12 sticky top-24 z-30 bg-gray-50/95 dark:bg-gray-950/95 backdrop-blur-sm py-4 rounded-xl">
             {CATEGORIES.map(category => (
                 <button
                     key={category}
                     onClick={() => {
                         setActiveCategory(category);
-                        setLightboxIndex(null); // Reset lightbox if open
+                        setLightboxIndex(null);
                     }}
                     className={`px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 ${
                         activeCategory === category
                         ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 scale-105'
-                        : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-emerald-600 border border-gray-200'
+                        : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-emerald-600 border border-gray-200 dark:border-gray-800'
                     }`}
                 >
                     {activeCategory === category && <Filter size={14} className="animate-pulse"/>}
@@ -111,33 +167,14 @@ const GalleryPage: React.FC = () => {
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto mb-20">
           {filteredImages.map((item, idx) => (
-            <div 
-              key={`${item.url}-${idx}`} 
-              onClick={() => openLightbox(idx)}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 bg-gray-200 cursor-zoom-in animate-in fade-in zoom-in-95 fill-mode-forwards"
-              style={{ animationDelay: `${idx * 50}ms` }}
-            >
-              <img 
-                src={item.url} 
-                alt={`${item.category} Project`} 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                loading="lazy"
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                 <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full p-3">
-                    <ZoomIn size={24} />
-                 </div>
-              </div>
-
-              {/* Category Tag */}
-              <div className="absolute bottom-4 left-4">
-                <span className="text-xs font-bold bg-black/50 text-white px-3 py-1 rounded-full backdrop-blur-md border border-white/10 shadow-lg translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-75">
-                    {item.category}
-                </span>
-              </div>
-            </div>
+            <LazyImage 
+                key={`${item.url}-${idx}`}
+                src={item.url}
+                alt={`${item.category} Project`}
+                category={item.category}
+                onClick={() => openLightbox(idx)}
+                className="animate-in fade-in zoom-in-95 fill-mode-forwards"
+            />
           ))}
         </div>
 
@@ -149,17 +186,17 @@ const GalleryPage: React.FC = () => {
         )}
 
         {/* CTA */}
-        <div className="bg-white rounded-3xl p-8 md:p-16 text-center shadow-lg shadow-emerald-900/5 border border-gray-100 max-w-4xl mx-auto relative overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 md:p-16 text-center shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 max-w-4xl mx-auto relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-5 transform rotate-12">
-             <Camera size={120} className="text-emerald-900" />
+             <Camera size={120} className="text-emerald-900 dark:text-emerald-100" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 relative z-10">Ready to Transform Your Lawn?</h2>
-          <p className="text-gray-600 mb-10 max-w-xl mx-auto text-lg relative z-10">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-6 relative z-10">Ready to Transform Your Lawn?</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-10 max-w-xl mx-auto text-lg relative z-10 font-medium">
             Let's make your property the next highlight in our gallery. Contact us today for a free, no-obligation estimate.
           </p>
           <NavLink 
             to="/quote" 
-            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-10 rounded-full shadow-xl shadow-emerald-600/30 transition-all transform hover:-translate-y-1 relative z-10"
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 px-10 rounded-full shadow-xl shadow-emerald-600/30 transition-all transform hover:-translate-y-1 relative z-10 active:scale-95"
           >
             Get My Free Quote
             <ChevronRight size={20} />
@@ -170,21 +207,19 @@ const GalleryPage: React.FC = () => {
 
       {/* Lightbox Modal */}
       {lightboxIndex !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-200">
             
-            {/* Close Button */}
             <button 
                 onClick={closeLightbox}
-                className="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all z-50"
+                className="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all z-[70]"
                 aria-label="Close Gallery"
             >
                 <X size={32} />
             </button>
 
-            {/* Navigation Buttons */}
             <button 
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                className="absolute left-4 md:left-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-50 hover:scale-110"
+                className="absolute left-4 md:left-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-[70] hover:scale-110"
                 aria-label="Previous Image"
             >
                 <ChevronLeft size={32} />
@@ -192,31 +227,30 @@ const GalleryPage: React.FC = () => {
 
             <button 
                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                className="absolute right-4 md:right-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-50 hover:scale-110"
+                className="absolute right-4 md:right-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all z-[70] hover:scale-110"
                 aria-label="Next Image"
             >
                 <ChevronRight size={32} />
             </button>
 
-            {/* Main Image Container */}
             <div 
                 className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12"
-                onClick={closeLightbox} // Click outside image to close
+                onClick={closeLightbox}
             >
                 <div 
                     className="relative max-h-full max-w-full"
-                    onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <img 
                         src={filteredImages[lightboxIndex].url} 
                         alt={filteredImages[lightboxIndex].category}
-                        className="max-h-[80vh] max-w-full object-contain rounded shadow-2xl animate-in zoom-in-95 duration-300"
+                        className="max-h-[80vh] max-w-full object-contain rounded-xl shadow-2xl animate-in zoom-in-95 duration-300 border border-white/10"
                     />
                     <div className="absolute bottom-4 left-0 right-0 text-center">
-                        <span className="inline-block bg-black/60 text-white/90 px-4 py-2 rounded-full backdrop-blur-md text-sm font-medium border border-white/10">
+                        <span className="inline-block bg-black/60 text-white/90 px-4 py-2 rounded-full backdrop-blur-md text-sm font-black border border-white/10 shadow-2xl">
                             {filteredImages[lightboxIndex].category}
                         </span>
-                         <div className="text-white/50 text-xs mt-2">
+                         <div className="text-white/50 text-xs mt-3 font-bold">
                             {lightboxIndex + 1} of {filteredImages.length}
                         </div>
                     </div>

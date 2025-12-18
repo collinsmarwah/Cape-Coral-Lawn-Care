@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, CheckCircle, AlertCircle, Check, ArrowRight, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { generateSmartQuote } from '../../services/geminiService';
 import { AIQuoteResponse } from '../../types';
 
@@ -22,6 +22,7 @@ const LAST_SERVICE_OPTIONS = [
 
 const AIQuoteGenerator: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +43,23 @@ const AIQuoteGenerator: React.FC = () => {
   });
 
   const [result, setResult] = useState<AIQuoteResponse | null>(null);
+
+  // Check for pre-selected service from navigation state
+  useEffect(() => {
+    if (location.state && (location.state as any).selectedService) {
+      const preSelected = (location.state as any).selectedService;
+      // Map display name to option if possible
+      const matched = SERVICE_OPTIONS.find(opt => preSelected.includes(opt.split(' ')[0]));
+      if (matched) {
+        setFormData(prev => ({
+          ...prev,
+          serviceTypes: [matched]
+        }));
+        // If we have a selection, maybe skip to step 3? 
+        // Let's stay on step 1 for lawn size but the service is ready.
+      }
+    }
+  }, [location.state]);
 
   // Smooth progress calculation
   useEffect(() => {
@@ -316,7 +334,7 @@ const AIQuoteGenerator: React.FC = () => {
             <div className="pt-4 space-y-4">
               <button 
                 onClick={() => navigate('/contact')}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl font-black text-xl transition-all shadow-2xl shadow-emerald-600/30 active:scale-95 flex items-center justify-center gap-3 group"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl font-black text-xl transition-all shadow-2xl shadow-emerald-600/20 active:scale-95 flex items-center justify-center gap-3 group"
               >
                 Book This Plan
                 <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
