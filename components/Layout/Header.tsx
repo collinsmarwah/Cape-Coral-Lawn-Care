@@ -137,7 +137,7 @@ const Header: React.FC = () => {
                 to="/quote" 
                 className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 px-6 py-3.5 flex items-center gap-2 group active:scale-95"
               >
-                Get Started
+                Get a Quote
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </NavLink>
             </div>
@@ -204,7 +204,7 @@ const Header: React.FC = () => {
               onClick={() => setIsOpen(false)}
               className="bg-emerald-600 text-white p-6 rounded-2xl font-black text-xl shadow-2xl shadow-emerald-600/30 text-center flex items-center justify-center gap-2"
             >
-              Instant Quote <Sparkles size={20} />
+              Get a Quote <Sparkles size={20} />
             </NavLink>
           </div>
         </div>
