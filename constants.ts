@@ -14,8 +14,7 @@ export const NAV_LINKS = [
   { name: 'Gallery', path: '/gallery' },
   { name: 'Locations', path: '/locations' },
   { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
-  { name: 'Legal', path: '/legal' }
+  { name: 'Contact', path: '/contact' }
 ];
 
 export const SERVICE_CATALOG = [
@@ -211,7 +210,7 @@ export const TESTIMONIALS: Testimonial[] = [
     location: 'Cape Coral',
     rating: 5,
     comment: 'Finally a lawn service that shows up on time! The text updates are a game changer.',
-    avatarUrl: 'https://picsum.photos/100/100'
+    avatarUrl: 'https://picsum.photos/100/100?random=11'
   },
   {
     id: '2',
@@ -219,7 +218,7 @@ export const TESTIMONIALS: Testimonial[] = [
     location: 'Fort Myers',
     rating: 5,
     comment: 'They transformed our overgrown backyard into a paradise. Honest pricing and great local team.',
-    avatarUrl: 'https://picsum.photos/101/101'
+    avatarUrl: 'https://picsum.photos/100/100?random=12'
   },
   {
     id: '3',
@@ -227,6 +226,6 @@ export const TESTIMONIALS: Testimonial[] = [
     location: 'Cape Coral',
     rating: 5,
     comment: 'Love supporting a business owned by locals. You can tell they care about the community.',
-    avatarUrl: 'https://picsum.photos/102/102'
+    avatarUrl: 'https://picsum.photos/100/100?random=13'
   }
 ];
